@@ -100,7 +100,11 @@ int getDeviceForAddress(const void* p) {
     err = cudaGetLastError();
     FAISS_ASSERT(err == cudaErrorInvalidValue);
     return -1;
+#if CUDA_VERSION >= 10000
+  } else if (att.type == cudaMemoryTypeHost) {
+#else
   } else if (att.memoryType == cudaMemoryTypeHost) {
+#endif
     return -1;
   } else {
     return att.device;
